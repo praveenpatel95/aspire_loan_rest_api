@@ -110,8 +110,8 @@ One Repository handles one model, Repository only does database logic like, Add,
 <br>
 #### Common used files
 1. Trait: there is one ApiResponse trait that handle success and error.<br>
-2. Exception: Some customer exception handling classes.
-3. Request: Handle http request
+2. Exception: Some custom exception handling classes.
+3. Request: Handle http request and validate
 4. Middleware: AdminMiddleware, CustomerMiddleware for strict access.
 
 
