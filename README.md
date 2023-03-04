@@ -49,6 +49,11 @@ DB_PASSWORD=my_password
 php artisan migrate
 ```
 
+If there is any issue or warning, you can run config cache command, it will update your new .env varibales or setting.
+```
+php artisan config:cache
+```
+
 3. Install passport, use below command:
 
 ```
@@ -70,9 +75,8 @@ php artisan serve
 I attached the postman collection file for a better understanding and using the APIs. 
  Import the file in your postman and change the {{base_url}} in your postman environment.
  
-```
-https://documenter.getpostman.com/view/9499370/2s93JnU6nf
-```
+[Postman collection link](https://documenter.getpostman.com/view/9499370/2s93JnU6nf)
+
 
 ## Run Test Cases
 For run test cases use below command
