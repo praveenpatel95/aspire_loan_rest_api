@@ -101,6 +101,20 @@ php artisan test --testsuite=U
 php artisan test --filter=LoanTest
 ```
 
+## Explanation
+I have designed the rest API with the manage version, Design patterns are:<br>
+Controller > Service -> Interface -> Repository
+
+All requests will handle by the controller and send to the service, Service will handle business logic and send it to the repository and return it.
+One Repository handles one model, Repository only does database logic like, Add, Edit, Delete, View, and get data in the database.
+<br>
+#### Common used files
+1. Trait: there is one ApiResponse trait that handle success and error.<br>
+2. Exception: Some customer exception handling classes.
+3. Request: Handle http request
+4. Middleware: AdminMiddleware, CustomerMiddleware for strict access.
+
+
 
 ## License
 
