@@ -17,3 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('setup', function (){
+    Artisan::call('config:cache');
+    Artisan::call('migrate:fresh');
+    Artisan::call('migrate');
+    Artisan::call('config:cache');
+    Artisan::call('passport:install');
+});
