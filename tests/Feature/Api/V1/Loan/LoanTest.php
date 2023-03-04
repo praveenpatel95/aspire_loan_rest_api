@@ -5,10 +5,19 @@ namespace Api\V1\Loan;
 use App\Models\Loan;
 use App\Models\User;
 use Carbon\Factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
 {
+    use RefreshDatabase, WithFaker;
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('passport:install');
+    }
+
     /**
      * Test loan Request without fill the required field
      * @return void

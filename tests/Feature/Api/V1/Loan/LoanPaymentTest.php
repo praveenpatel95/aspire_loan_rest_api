@@ -5,13 +5,17 @@ namespace Tests\Feature\Api\V1\Loan;
 use App\Models\Loan;
 use App\Models\LoanPayment;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LoanPaymentTest extends TestCase
 {
+    use RefreshDatabase, WithFaker;
     public function setUp(): void
     {
         parent::setUp();
+        $this->artisan('passport:install');
         $this->user = User::factory()->hasLoans(1)->create();
     }
 

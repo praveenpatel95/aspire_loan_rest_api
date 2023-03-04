@@ -2,11 +2,21 @@
 
 namespace Tests\Feature\Api\V1\Auth;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
 {
+    use RefreshDatabase, WithFaker;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('passport:install');
+    }
+
     /**
      * Test Customer register without required fields
      * Check validation

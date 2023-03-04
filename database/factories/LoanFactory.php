@@ -19,6 +19,7 @@ class LoanFactory extends Factory
         return [
             'amount' => rand(9,99),
             'term' => 3,
+            'status' =>"PENDING",
         ];
     }
 }
