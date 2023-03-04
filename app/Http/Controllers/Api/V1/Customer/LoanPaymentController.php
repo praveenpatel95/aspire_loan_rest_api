@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Loan\LoanPaymentRequest;
 use App\Services\Loan\LoanPaymentService;
 use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class LoanPaymentController extends Controller
 {
@@ -23,7 +24,7 @@ class LoanPaymentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\BadRequestException
      */
-    public function payment(int $loanId, LoanPaymentRequest $request)
+    public function payment(int $loanId, LoanPaymentRequest $request) : JsonResponse
     {
         return $this->success($this->loanPaymentService->payment($loanId, $request->input('amount')));
     }

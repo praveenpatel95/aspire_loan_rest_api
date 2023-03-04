@@ -7,6 +7,7 @@ use App\Repository\Loan\LoanInterface;
 use App\Repository\Loan\LoanPaymentInterface;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+
 class LoanPaymentService
 {
     protected LoanPaymentInterface $loanPaymentRepository;
@@ -14,7 +15,7 @@ class LoanPaymentService
 
     public function __construct(
         LoanPaymentInterface $loanPaymentRepository,
-        LoanInterface $loanRepository
+        LoanInterface        $loanRepository
     )
     {
         $this->loanPaymentRepository = $loanPaymentRepository;
@@ -28,20 +29,18 @@ class LoanPaymentService
      * @return void
      * @throws BadRequestException
      */
-    public function payment(int $loanId, float $amount)
+    public function payment(int $loanId, float $amount): void
     {
         try {
             $userId = Auth::id();
             $loan = $this->loanRepository->getById($loanId);
-            if($loan->status != "APPROVED"){
+            if ($loan->status != "APPROVED") {
                 throw new BadRequestException("Your loan is not approved yet.");
-
             };
 
-            $pendingLoans = $this->loanPaymentRepository->getPendingLoans($loanId, $userId);
-            if(count($pendingLoans) === 0){
+            $pendingLoans = $this->loanPaymentRepository->getLoanPendingPayments($loanId, $userId);
+            if (count($pendingLoans) === 0) {
                 throw new BadRequestException("All payment done for this loan");
-
             }
             $pendingLoan = $pendingLoans[0];
             if ($pendingLoan->payable_amount > $amount) {
@@ -54,8 +53,7 @@ class LoanPaymentService
             ];
             $this->loanPaymentRepository->update($updatePayment, $pendingLoan->id);
             $this->updateLoanPaid($loanId, $userId);
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             throw new BadRequestException($exception->getMessage());
         }
     }
@@ -66,9 +64,10 @@ class LoanPaymentService
      * @param $userId
      * @return bool|null
      */
-    public function updateLoanPaid($loanId, $userId){
-        $pendingLoan = $this->loanPaymentRepository->getPendingLoans($loanId, $userId);
-        if(count($pendingLoan) === 0){
+    public function updateLoanPaid($loanId, $userId) : bool
+    {
+        $pendingLoan = $this->loanPaymentRepository->getLoanPendingPayments($loanId, $userId);
+        if (count($pendingLoan) === 0) {
             return $this->loanRepository->update(['status' => 'PAID'], $loanId);
         }
         return false;

@@ -13,7 +13,7 @@ class LoanTest extends TestCase
      * Test loan Request without fill the required field
      * @return void
      */
-    public function test_loan_request_without_required_field()
+    public function test_loan_request_without_required_field() : void
     {
 
         $this->withHeaders($this->customerAuthorization())
@@ -38,11 +38,11 @@ class LoanTest extends TestCase
      * @return void
      */
 
-    public function test_loan_request_with_required_field()
+    public function test_loan_request_with_required_field() : void
     {
         $data = [
-          'amount' => 10.000,
-          'term' => 3,
+            'amount' => 10.000,
+            'term' => 3,
         ];
         $this->withHeaders($this->customerAuthorization())
             ->post('/api/v1/customer/loan', $data)
@@ -57,11 +57,11 @@ class LoanTest extends TestCase
      * @return void
      */
 
-    public function test_loan_request_without_login_customer()
+    public function test_loan_request_without_login_customer() : void
     {
         $data = [
-          'amount' => 10.000,
-          'term' => 3,
+            'amount' => 10.000,
+            'term' => 3,
         ];
         $this->withHeaders(['Accept' => 'application/json'])
             ->post('/api/v1/customer/loan', $data)
@@ -75,7 +75,7 @@ class LoanTest extends TestCase
      * Check if it is not admin
      * @return void
      */
-    public function test_get_loans_without_login()
+    public function test_get_loans_without_login() : void
     {
 
         $this->withHeaders(['Accept' => 'application/json'])
@@ -90,7 +90,7 @@ class LoanTest extends TestCase
      * Customer can't access the all loans
      * @return void
      */
-    public function test_get_loans_without_login_as_a_admin()
+    public function test_get_loans_without_login_as_a_admin() : void
     {
 
         $this->withHeaders($this->customerAuthorization())
@@ -106,7 +106,7 @@ class LoanTest extends TestCase
      * Admin can get all loans
      * @return void
      */
-    public function test_get_loans_with_login_as_a_admin()
+    public function test_get_loans_with_login_as_a_admin() : void
     {
 
         $this->withHeaders($this->customerAuthorization('ADMIN'))
@@ -117,19 +117,27 @@ class LoanTest extends TestCase
             ]);
     }
 
-    public function test_get_loan_detail_login_as_a_admin()
+    /**
+     * Get loan detail by ID | Login as admin
+     * @return void
+     */
+    public function test_get_loan_detail_login_as_a_admin() : void
     {
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
         $this->withHeaders($this->customerAuthorization('ADMIN'))
-            ->get('/api/v1/admin/loan/'.$loan->id)
+            ->get('/api/v1/admin/loan/' . $loan->id)
             ->assertSuccessful() // Status code 200
             ->assertJson([
                 'success' => true
             ]);
     }
 
-    public function test_approve_loan_by_admin_only()
+    /**
+     * Check loan only approve by Admin
+     * @return void
+     */
+    public function test_approve_loan_by_admin_only() : void
     {
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
@@ -139,12 +147,16 @@ class LoanTest extends TestCase
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    'status'  => "APPROVED"
+                    'status' => "APPROVED"
                 ],
             ]);
     }
 
-    public function test_not_approve_loan_login_as_customer()
+    /**
+     * Check customer can not approve loan
+     * @return void
+     */
+    public function test_not_approve_loan_login_as_customer() : void
     {
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
@@ -157,9 +169,49 @@ class LoanTest extends TestCase
             ]);
     }
 
-    public function customerAuthorization($role='CUSTOMER')
+    /**
+     * Check get customer loans
+     * @return void
+     */
+    public function test_get_customer_loans_login_as_customer() : void
     {
-        $user = User::factory()->create(['role' => $role]);
+        $user = User::factory()->hasLoans(5)->create();
+
+        $response = $this->withHeaders($this->customerAuthorization('CUSTOMER', $user))
+            ->get("/api/v1/customer/loan")
+            ->assertSuccessful() // Status code 200
+            ->assertJson([
+                'success' => true
+            ]);
+        $this->assertEquals(5, count($response['data']));
+    }
+
+    /**
+     * Check customer have no any loan
+     * @return void
+     */
+    public function test_get_customer_have_no_any_loan_login_as_customer() : void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->withHeaders($this->customerAuthorization('CUSTOMER', $user))
+            ->get("/api/v1/customer/loan")
+            ->assertSuccessful() // Status code 200
+            ->assertJson([
+                'success' => true
+            ]);
+        $this->assertEquals(0, count($response['data']));
+    }
+
+    /**
+     * Common authorization funtion
+     * @param $user
+     * @param $role
+     * @return string[]
+     */
+    public function customerAuthorization($role = 'CUSTOMER', $user = null) : array
+    {
+        $user = $user ? $user : User::factory()->create(['role' => $role]);
         $data = [
             'email' => $user->email,
             'password' => 'password'

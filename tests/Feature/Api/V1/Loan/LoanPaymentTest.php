@@ -15,7 +15,7 @@ class LoanPaymentTest extends TestCase
         $this->user = User::factory()->hasLoans(1)->create();
     }
 
-    public function test_make_loan_payment_without_fill_amount()
+    public function test_make_loan_payment_without_fill_amount() : void
     {
 
         $loan = $this->user->loans[0];
@@ -33,7 +33,7 @@ class LoanPaymentTest extends TestCase
     }
 
 
-    public function test_make_loan_payment_for_unapproved_loan()
+    public function test_make_loan_payment_for_unapproved_loan() : void
     {
         $loan = $this->user->loans[0];
         $this->withHeaders($this->customerAuthorization($this->user))
@@ -45,7 +45,7 @@ class LoanPaymentTest extends TestCase
             ]);
     }
 
-    public function test_make_loan_payment_for_approved_loan()
+    public function test_make_loan_payment_for_approved_loan() : void
     {
         $user = User::factory()->create();
         $loan = Loan::factory(['user_id' => $user->id, 'status' => 'APPROVED'])->create();
@@ -63,7 +63,7 @@ class LoanPaymentTest extends TestCase
     }
 
 
-    public function customerAuthorization($user)
+    public function customerAuthorization($user) : array
     {
         $data = [
             'email' => $user->email,

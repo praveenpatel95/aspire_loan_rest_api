@@ -11,7 +11,7 @@ class InvalidCredentialsException extends Exception
     use ApiResponse;
 
 
-    public function render()
+    public function render() : JsonResponse
     {
         return $this->error($this->message,
             401

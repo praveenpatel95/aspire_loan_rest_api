@@ -15,7 +15,7 @@ class LoanPaymentRepository implements LoanPaymentInterface
      * @param array $data
      * @return LoanPayment|null
      */
-    public function create(array $data): ?LoanPayment
+    public function create(array $data): LoanPayment
     {
         return LoanPayment::create($data);
     }
@@ -27,14 +27,13 @@ class LoanPaymentRepository implements LoanPaymentInterface
      * @return Collection|null
      * @throws BadRequestException
      */
-    public function getPendingLoans(int $loanId, int $userId) :?Collection
+    public function getLoanPendingPayments(int $loanId, int $userId): Collection
     {
         try {
             return LoanPayment::where('status', 'PENDING')
                 ->where('loan_id', $loanId)
                 ->get();
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             throw new BadRequestException('No any pending loan payment found');
         }
 
@@ -47,12 +46,11 @@ class LoanPaymentRepository implements LoanPaymentInterface
      * @return bool|null
      * @throws BadRequestException
      */
-    public function update(array $data, int $updateId) :?bool
+    public function update(array $data, int $updateId): bool
     {
         try {
             return LoanPayment::findOrFail($updateId)->update($data);
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             throw new BadRequestException($exception->getMessage());
         }
     }

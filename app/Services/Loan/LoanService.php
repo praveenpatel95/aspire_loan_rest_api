@@ -7,6 +7,7 @@ use App\Models\Loan;
 use App\Repository\Loan\LoanInterface;
 use App\Repository\Loan\LoanPaymentInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -28,12 +29,11 @@ class LoanService
     /**
      * Handle Loan Request
      * @param array $data
-     * @return void
+     * @return Loan
      * @throws BadRequestException
-     * use DB::beginTransaction() if in case process not completed.
      */
 
-    public function create(array $data) : ?Loan
+    public function create(array $data): Loan
     {
         $ewi = $this->calculateLoanEwi($data['amount'], $data['term']);
         $userId = Auth::id();
@@ -64,11 +64,11 @@ class LoanService
     }
 
     /**
-     * @param $totalAmount
-     * @param $term
-     * @return float|int
+     * @param float $totalAmount
+     * @param int $term
+     * @return float
      */
-    public function calculateLoanEwi($totalAmount, $term)  :float
+    public function calculateLoanEwi(float $totalAmount, int $term): float
     {
         if ($term === 0)
             return 0;
@@ -76,22 +76,31 @@ class LoanService
     }
 
     /**
-     * Get loans from repository
-     * @return \Illuminate\Database\Eloquent\Collection
+     * Get all loans
+     * @return Collection
      */
-    public function get(){
+    public function get(): Collection
+    {
         return $this->loanRepository->get();
     }
 
-    public function getById(int $loanID){
+    /**
+     * Get loan detail by ID
+     * @param int $loanID
+     * @return Loan
+     */
+    public function getById(int $loanID): Loan
+    {
         return $this->loanRepository->getById($loanID);
     }
 
-    public function approve(int $loanID){
+    public function approve(int $loanID): Loan
+    {
         return $this->loanRepository->approve($loanID);
     }
 
-    public function getCustomerLoans(){
+    public function getCustomerLoans(): Collection
+    {
         $userId = Auth::id();
         return $this->loanRepository->getCustomerLoans($userId);
     }

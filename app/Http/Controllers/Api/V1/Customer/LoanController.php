@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Loan\CreatRequest;
 use App\Services\Loan\LoanService;
 use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class LoanController extends Controller
 {
@@ -22,15 +23,16 @@ class LoanController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\BadRequestException
      */
-    public function create(CreatRequest $creatRequest){
+    public function create(CreatRequest $creatRequest) : JsonResponse{
         return $this->success($this->loanService->create($creatRequest->all()));
     }
 
     /**
      * Gte customer loans
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function get(){
+    public function get() : JsonResponse
+    {
         return $this->success($this->loanService->getCustomerLoans());
     }
 }

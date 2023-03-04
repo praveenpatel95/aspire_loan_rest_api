@@ -33,7 +33,7 @@ class RegisterController extends Controller
      * @param UserRequest $request
      * @return JsonResponse
      */
-    public function createAdmin(UserRequest $request)
+    public function createAdmin(UserRequest $request) : JsonResponse
     {
         return $this->success($this->authService->create($request->all(), 'ADMIN'));
     }

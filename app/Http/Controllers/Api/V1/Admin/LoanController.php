@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\Loan\LoanService;
 use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class LoanController extends Controller
 {
@@ -17,27 +18,30 @@ class LoanController extends Controller
 
     /**
      * get all loans
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function get(){
+    public function get() : JsonResponse
+    {
         return $this->success($this->loanService->get());
     }
 
     /**
      * Get loan detail by id
      * @param int $loanID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getById(int $loanID){
+    public function getById(int $loanID) : JsonResponse
+    {
         return $this->success($this->loanService->getById($loanID));
     }
 
     /**
      * Approve loan
      * @param int $loanID
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function approve(int $loanID){
+    public function approve(int $loanID) : JsonResponse
+    {
         return $this->success($this->loanService->approve($loanID));
     }
 }

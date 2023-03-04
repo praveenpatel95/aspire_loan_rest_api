@@ -16,7 +16,7 @@ class LoanRepository implements LoanInterface
      * @param array $data
      * @return Loan|null
      */
-    public function create(array $data): ?Loan
+    public function create(array $data): Loan
     {
         return Loan::create($data);
     }
@@ -36,7 +36,7 @@ class LoanRepository implements LoanInterface
      * @return Loan|null
      * @throws BadRequestException
      */
-    public function getById(int $loanID): ?Loan
+    public function getById(int $loanID): Loan
     {
         try {
             return Loan::with(['user', 'loanPayments'])->findOrFail($loanID);
@@ -52,7 +52,7 @@ class LoanRepository implements LoanInterface
      * @return Loan|null
      * @throws BadRequestException
      */
-    public function approve(int $loanID): ?Loan
+    public function approve(int $loanID): Loan
     {
         try {
             $loan = Loan::findOrFail($loanID);
@@ -70,7 +70,7 @@ class LoanRepository implements LoanInterface
      * @return Collection|null
      * @throws BadRequestException
      */
-    public function getCustomerLoans(int $userId): ?Collection
+    public function getCustomerLoans(int $userId): Collection
     {
         try {
             return Loan::with(['user', 'loanPayments'])
@@ -88,7 +88,7 @@ class LoanRepository implements LoanInterface
      * @return bool|null
      * @throws BadRequestException
      */
-    public function update(array $data, $loanId): ?bool
+    public function update(array $data, $loanId): bool
     {
         try {
             return Loan::findOrFail($loanId)->update($data);
