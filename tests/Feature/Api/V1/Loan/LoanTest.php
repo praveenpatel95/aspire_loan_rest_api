@@ -15,7 +15,6 @@ class LoanTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('passport:install');
     }
 
     /**

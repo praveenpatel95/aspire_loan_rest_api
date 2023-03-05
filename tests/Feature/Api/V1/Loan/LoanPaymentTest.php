@@ -15,7 +15,7 @@ class LoanPaymentTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('passport:install');
+
         $this->user = User::factory()->hasLoans(1)->create();
     }
 

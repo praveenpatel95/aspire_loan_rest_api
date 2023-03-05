@@ -14,7 +14,6 @@ class RegisterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('passport:install');
     }
 
     /**
