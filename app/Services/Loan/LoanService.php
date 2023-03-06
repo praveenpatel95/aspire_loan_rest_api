@@ -91,7 +91,12 @@ class LoanService
      */
     public function getById(int $loanID): Loan
     {
-        return $this->loanRepository->getById($loanID);
+        $loan =  $this->loanRepository->getById($loanID);
+        $user = Auth::user();
+        if ($user->can('view', $loan)){
+            return $loan;
+        }
+        throw new BadRequestException("You can not see this loan.");
     }
 
     public function approve(int $loanID): Loan

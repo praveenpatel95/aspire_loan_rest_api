@@ -126,7 +126,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Get loan detail by ID | Login as admin
+     * Get loan detail by ID | Admin can see any customer loan
      * @return void
      */
     public function test_get_loan_detail_login_as_a_admin() : void
@@ -134,10 +134,43 @@ class LoanTest extends TestCase
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
         $this->withHeaders($this->customerAuthorization('ADMIN'))
-            ->get('/api/v1/admin/loan/' . $loan->id)
+            ->get('/api/v1/loan/' . $loan->id)
             ->assertSuccessful() // Status code 200
             ->assertJson([
                 'success' => true
+            ]);
+    }
+
+    /**
+     * Get loan detail by ID | Customer can see own loan only
+     * @return void
+     */
+    public function test_get_loan_detail_login_as_a_customer() : void
+    {
+        $user = User::factory()->create();
+        $loan = Loan::factory()->create(['user_id' => $user->id]);
+        $this->withHeaders($this->customerAuthorization($user))
+            ->get('/api/v1/loan/' . $loan->id)
+            ->assertSuccessful() // Status code 200
+            ->assertJson([
+                'success' => true
+            ]);
+    }
+
+    /**
+     * Get loan detail by ID | Customer can not see other customer loan
+     * @return void
+     */
+    public function test_get_loan_detail_other_customer_login_as_customer() : void
+    {
+        $user = User::factory()->create();
+        $loan = Loan::factory()->create(['user_id' => $user->id]);
+        $this->withHeaders($this->customerAuthorization())
+            ->get('/api/v1/loan/' . $loan->id)
+            ->assertStatus(400)
+            ->assertJson([
+                'success' => false,
+                'message' => 'You can not see this loan.'
             ]);
     }
 

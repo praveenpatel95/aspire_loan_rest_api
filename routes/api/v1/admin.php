@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\V1\Admin\LoanController;
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::group(['prefix' => 'loan'], function () {
         Route::get('', [LoanController::class, 'get']);
-        Route::get('/{loanId}', [LoanController::class, 'getById']);
         Route::post('/{loanId}/approve', [LoanController::class, 'approve']);
     });
 });
