@@ -33,6 +33,6 @@ class LoanController extends Controller
      */
     public function get() : JsonResponse
     {
-        return $this->success($this->loanService->getCustomerLoans());
+        return $this->success($this->loanService->get());
     }
 }

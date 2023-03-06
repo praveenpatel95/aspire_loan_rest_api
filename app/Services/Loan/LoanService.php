@@ -81,7 +81,12 @@ class LoanService
      */
     public function get(): Collection
     {
-        return $this->loanRepository->get();
+        $user = Auth::user();
+        $userId=null;
+        if($user->role === "CUSTOMER"){
+            $userId = $user->id;
+        }
+        return $this->loanRepository->get($userId);
     }
 
     /**
@@ -104,9 +109,4 @@ class LoanService
         return $this->loanRepository->approve($loanID);
     }
 
-    public function getCustomerLoans(): Collection
-    {
-        $userId = Auth::id();
-        return $this->loanRepository->getCustomerLoans($userId);
-    }
 }

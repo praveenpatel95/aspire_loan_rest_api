@@ -22,12 +22,20 @@ class LoanRepository implements LoanInterface
     }
 
     /**
-     * get all loans
+     * get loans
      * @return Collection
      */
-    public function get(): Collection
+    public function get($userId): Collection
     {
-        return Loan::with(['user', 'loanPayments'])->get();
+        try {
+            $query = Loan::with(['user', 'loanPayments']);
+            if ($userId) {
+                $query->where('user_id', $userId);
+            }
+            return $query->get();
+        } catch (Exception $exception) {
+            throw new BadRequestException($exception->getMessage());
+        }
     }
 
     /**
@@ -61,23 +69,6 @@ class LoanRepository implements LoanInterface
             return $loan;
         } catch (Exception $exception) {
             throw new BadRequestException("No loan was found by id.");
-        }
-    }
-
-    /**
-     * get customer loans
-     * @param int $userId
-     * @return Collection|null
-     * @throws BadRequestException
-     */
-    public function getCustomerLoans(int $userId): Collection
-    {
-        try {
-            return Loan::with(['user', 'loanPayments'])
-                ->where('user_id', $userId)
-                ->get();
-        } catch (Exception $exception) {
-            throw new BadRequestException($exception->getMessage());
         }
     }
 
