@@ -17,10 +17,10 @@ class AuthService
     }
 
     /**
-     * handle create account request
+     * Create user account
      * @param array $data
      * @param string $role
-     * @return \App\Models\User|null
+     * @return User
      */
     public function create(array $data, string $role): User
     {
@@ -29,9 +29,9 @@ class AuthService
     }
 
     /**
-     * handle login request
+     * Login user
      * @param array $data
-     * @return \App\Models\User|\Illuminate\Database\Eloquent\Model
+     * @return User
      * @throws InvalidCredentialsException
      */
     public function login(array $data): User

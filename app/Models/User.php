@@ -46,6 +46,7 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get authorization token
      * @return Model|$this
      */
     function withToken() : Model|User
@@ -54,6 +55,10 @@ class User extends Authenticatable
         return $this;
     }
 
+    /**
+     * Get loans for this user
+     * @return HasMany
+     */
     function loans() : HasMany
     {
         return $this->hasMany(Loan::class);

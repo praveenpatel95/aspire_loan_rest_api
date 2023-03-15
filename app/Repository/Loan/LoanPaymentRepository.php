@@ -21,10 +21,10 @@ class LoanPaymentRepository implements LoanPaymentInterface
     }
 
     /**
-     * get all pending loan payemnts of the customers
+     * Get all pending loan payments of the customers
      * @param int $loanId
      * @param int $userId
-     * @return Collection|null
+     * @return Collection
      * @throws BadRequestException
      */
     public function getLoanPendingPayments(int $loanId, int $userId): Collection
@@ -43,7 +43,7 @@ class LoanPaymentRepository implements LoanPaymentInterface
      * Update loan payment detail
      * @param array $data
      * @param int $updateId
-     * @return bool|null
+     * @return bool
      * @throws BadRequestException
      */
     public function update(array $data, int $updateId): bool

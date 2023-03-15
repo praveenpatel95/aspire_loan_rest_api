@@ -14,7 +14,7 @@ class LoanRepository implements LoanInterface
     /**
      * Create loan
      * @param array $data
-     * @return Loan|null
+     * @return Loan
      */
     public function create(array $data): Loan
     {
@@ -22,8 +22,10 @@ class LoanRepository implements LoanInterface
     }
 
     /**
-     * get loans
+     * Get loans with loan payments
+     * @param $userId
      * @return Collection
+     * @throws BadRequestException
      */
     public function get($userId): Collection
     {
@@ -39,9 +41,9 @@ class LoanRepository implements LoanInterface
     }
 
     /**
-     * get loan detail by id
+     * Get loan detail by loan id
      * @param int $loanID
-     * @return Loan|null
+     * @return Loan
      * @throws BadRequestException
      */
     public function getById(int $loanID): Loan
@@ -57,7 +59,7 @@ class LoanRepository implements LoanInterface
     /**
      * Approve loan
      * @param int $loanID
-     * @return Loan|null
+     * @return Loan
      * @throws BadRequestException
      */
     public function approve(int $loanID): Loan
@@ -76,7 +78,7 @@ class LoanRepository implements LoanInterface
      * Update loan detail
      * @param array $data
      * @param $loanId
-     * @return bool|null
+     * @return bool
      * @throws BadRequestException
      */
     public function update(array $data, $loanId): bool

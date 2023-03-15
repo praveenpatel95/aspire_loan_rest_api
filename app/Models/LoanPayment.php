@@ -19,6 +19,10 @@ class LoanPayment extends Model
         'paid_date',
     ];
 
+    /**
+     * Get loan belong to this loan payment
+     * @return BelongsTo
+     */
     function loan() :BelongsTo
     {
         return $this->belongsTo(Loan::class);

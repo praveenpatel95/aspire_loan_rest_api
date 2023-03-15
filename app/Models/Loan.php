@@ -17,11 +17,19 @@ class Loan extends Model
         'term'
     ];
 
+    /**
+     * Get loan payments
+     * @return HasMany
+     */
     function loanPayments(): HasMany
     {
         return $this->hasMany(LoanPayment::class);
     }
 
+    /**
+     * get user belongs to this user
+     * @return BelongsTo
+     */
     function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

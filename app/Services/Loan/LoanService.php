@@ -27,7 +27,7 @@ class LoanService
     }
 
     /**
-     * Handle Loan Request
+     * Create Loan
      * @param array $data
      * @return Loan
      * @throws BadRequestException
@@ -64,6 +64,7 @@ class LoanService
     }
 
     /**
+     * Calculate loan EMI
      * @param float $totalAmount
      * @param int $term
      * @return float
@@ -90,9 +91,10 @@ class LoanService
     }
 
     /**
-     * Get loan detail by ID
+     * Get loan detail by loan id
      * @param int $loanID
      * @return Loan
+     * @throws BadRequestException
      */
     public function getById(int $loanID): Loan
     {
@@ -104,6 +106,11 @@ class LoanService
         throw new BadRequestException("You can not see this loan.");
     }
 
+    /**
+     * Approve loan by admin
+     * @param int $loanID
+     * @return Loan
+     */
     public function approve(int $loanID): Loan
     {
         return $this->loanRepository->approve($loanID);

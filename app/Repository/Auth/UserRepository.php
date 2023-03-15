@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Hash;
 use Exception;
 class UserRepository implements UserInterface
 {
+    /**
+     * Create user
+     * @param array $data
+     * @return User
+     * @throws BadRequestException
+     */
     public function create(array $data) :User
     {
         //we can pass encryption from service but if in future change encryption method so use in repository
@@ -20,6 +26,11 @@ class UserRepository implements UserInterface
         }
     }
 
+    /**
+     * Get user detail by email
+     * @param string $email
+     * @return User|null
+     */
     public function getByEmail(string $email) : ?User
     {
        return User::where('email', $email)->first();

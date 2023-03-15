@@ -23,7 +23,7 @@ class LoanPaymentService
     }
 
     /**
-     * hande payment request
+     * Loan payment
      * @param int $loanId
      * @param float $amount
      * @return void
@@ -59,10 +59,10 @@ class LoanPaymentService
     }
 
     /**
-     * Handle Update Loan status as Paid if all payment done against to that loan
+     * Update Loan status as Paid if all payment done against to that loan
      * @param $loanId
      * @param $userId
-     * @return bool|null
+     * @return bool
      */
     public function updateLoanPaid($loanId, $userId) : bool
     {

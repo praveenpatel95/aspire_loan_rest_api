@@ -18,10 +18,10 @@ class LoanPaymentController extends Controller
     }
 
     /**
-     * Customer payment request
+     * Loan payment
      * @param int $loanId
      * @param LoanPaymentRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \App\Exceptions\BadRequestException
      */
     public function payment(int $loanId, LoanPaymentRequest $request) : JsonResponse

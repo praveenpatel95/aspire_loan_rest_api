@@ -19,7 +19,8 @@ class RegisterController extends Controller
         $this->authService = $authService;
     }
 
-    /** Create account as a customer
+    /**
+     * Create account as a customer
      * @param UserRequest $request
      * @return JsonResponse
      */
@@ -29,7 +30,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Create account as a admin
+     * Create account as an admin
      * @param UserRequest $request
      * @return JsonResponse
      */

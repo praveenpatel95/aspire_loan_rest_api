@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 trait ApiResponse
 {
     /**
-     * Build a success response
+     * Success response
      * @param $data
      * @param $status
      * @return \Illuminate\Http\JsonResponse
@@ -18,7 +18,7 @@ trait ApiResponse
     }
 
     /**
-     * Build error response
+     * Error response
      * @param $message
      * @param $status
      * @return \Illuminate\Http\JsonResponse

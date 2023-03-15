@@ -20,7 +20,7 @@ class LoanController extends Controller
     /**
      * Create loan request
      * @param CreatRequest $creatRequest
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \App\Exceptions\BadRequestException
      */
     public function create(CreatRequest $creatRequest) : JsonResponse{
@@ -28,7 +28,7 @@ class LoanController extends Controller
     }
 
     /**
-     * Gte customer loans
+     * Get customer loans
      * @return JsonResponse
      */
     public function get() : JsonResponse

@@ -18,11 +18,11 @@ class LoginController extends Controller
     }
 
     /**
-     * Login
+     * Login user
      * @param LoginRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\InvalidCredentialsException
+     * @return JsonResponse
      */
+
     public function login(LoginRequest $request) : JsonResponse
     {
         return $this->success($this->authService->login($request->all()));

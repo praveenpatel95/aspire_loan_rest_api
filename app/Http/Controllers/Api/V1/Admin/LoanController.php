@@ -26,9 +26,10 @@ class LoanController extends Controller
     }
 
     /**
-     * Get loan detail by id
+     * Get loan detail by loan id
      * @param int $loanID
      * @return JsonResponse
+     * @throws \App\Exceptions\BadRequestException
      */
     public function getById(int $loanID) : JsonResponse
     {
@@ -36,7 +37,7 @@ class LoanController extends Controller
     }
 
     /**
-     * Approve loan
+     * Approve loan by admin
      * @param int $loanID
      * @return JsonResponse
      */
