@@ -10,13 +10,9 @@ use Tests\TestCase;
 class LoginTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     /**
-     * Pass without email and password
+     * Test user can not login without required fields
      * Check required validation
      * @return void
      */
@@ -40,7 +36,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Check login with invalid credentials
+     * Test user can not login with invalid login detail
      * @return void
      */
     public function test_not_login_with_invalid_credentials(): void
@@ -60,7 +56,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Check login with valid login credentials
+     * Test user can login with valid login detail
      * @return void
      */
     public function test_login_with_valid_credentials(): void

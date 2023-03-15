@@ -12,10 +12,6 @@ use Tests\TestCase;
 class LoanTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     /**
      * Test loan Request without fill the required field
@@ -61,7 +57,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check without login user not create the loan request
+     * Test without login user not create the loan request
      * @return void
      */
 
@@ -80,7 +76,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check if it is not admin
+     * Test can not get loan without login
      * @return void
      */
     public function test_get_loans_without_login() : void
@@ -95,7 +91,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Customer can't access the all loans
+     * Test except admin can not access all loans route
      * @return void
      */
     public function test_get_loans_without_login_as_a_admin() : void
@@ -111,7 +107,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Admin can get all loans
+     * Test Admin can get all customers loans
      * @return void
      */
     public function test_get_loans_with_login_as_a_admin() : void
@@ -126,7 +122,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Get loan detail by ID | Admin can see any customer loan
+     * Test admin can see loan detail by loan id
      * @return void
      */
     public function test_get_loan_detail_login_as_a_admin() : void
@@ -142,7 +138,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Get loan detail by ID | Customer can see own loan only
+     * Test customer can see only self loan detail
      * @return void
      */
     public function test_get_loan_detail_login_as_a_customer() : void
@@ -158,7 +154,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Get loan detail by ID | Customer can not see other customer loan
+     * Test customer can not see other customer loan detail
      * @return void
      */
     public function test_get_loan_detail_other_customer_login_as_customer() : void
@@ -175,7 +171,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check loan only approve by Admin
+     * Test loan only approve by admin
      * @return void
      */
     public function test_approve_loan_by_admin_only() : void
@@ -194,7 +190,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check customer can not approve loan
+     * Test loan can not approve by except of the admin
      * @return void
      */
     public function test_not_approve_loan_login_as_customer() : void
@@ -211,7 +207,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check get customer loans
+     * Test Customer can get all self loan details
      * @return void
      */
     public function test_get_customer_loans_login_as_customer() : void
@@ -228,7 +224,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Check customer have no any loan
+     * Test if customer have no any loan
      * @return void
      */
     public function test_get_customer_have_no_any_loan_login_as_customer() : void
@@ -245,7 +241,7 @@ class LoanTest extends TestCase
     }
 
     /**
-     * Common authorization funtion
+     * Common authorization service
      * @param $user
      * @param $role
      * @return string[]

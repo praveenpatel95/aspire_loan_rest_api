@@ -11,13 +11,8 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
-     * Test Customer register without required fields
+     * Test customer can not register without required fields
      * Check validation
      * @return void
      */
@@ -78,7 +73,7 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * Test Admin register without required fields
+     * Test Admin can not register without required fields
      * Check validation
      * @return void
      */
@@ -105,7 +100,7 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * Test Admin register with required fields
+     * Test Admin can register with required fields
      * Create Admin
      * @return void
      */

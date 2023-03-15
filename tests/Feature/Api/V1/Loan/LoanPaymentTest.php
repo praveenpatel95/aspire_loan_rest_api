@@ -15,10 +15,13 @@ class LoanPaymentTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
         $this->user = User::factory()->hasLoans(1)->create();
     }
 
+    /**
+     * Test can not make payment without fill the amount
+     * @return void
+     */
     public function test_make_loan_payment_without_fill_amount() : void
     {
 
@@ -37,6 +40,10 @@ class LoanPaymentTest extends TestCase
     }
 
 
+    /**
+     * Test customer can not make payment for unapproved loan
+     * @return void
+     */
     public function test_make_loan_payment_for_unapproved_loan() : void
     {
         $loan = $this->user->loans[0];
@@ -49,6 +56,10 @@ class LoanPaymentTest extends TestCase
             ]);
     }
 
+    /**
+     * Test customer can make payment for approved loan
+     * @return void
+     */
     public function test_make_loan_payment_for_approved_loan() : void
     {
         $user = User::factory()->create();
@@ -67,6 +78,11 @@ class LoanPaymentTest extends TestCase
     }
 
 
+    /**
+     * Authorization service
+     * @param $user
+     * @return string[]
+     */
     public function customerAuthorization($user) : array
     {
         $data = [
