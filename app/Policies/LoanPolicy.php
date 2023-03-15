@@ -14,12 +14,10 @@ class LoanPolicy
      */
     public function view(User $user, Loan $loan): bool
     {
-        if($user->role === "ADMIN")
+        if ($user->role === "ADMIN")
             return true;
 
-        return $user->id === $loan->user_id
-            ? true
-            : false;
+        return $user->id === $loan->user_id;
 
 
     }

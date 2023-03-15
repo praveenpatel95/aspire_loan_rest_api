@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Handle admin request
+     * @param Request $request
+     * @param Closure $next
+     * @return Response
+     * @throws ForbiddenException
      */
     public function handle(Request $request, Closure $next): Response
     {

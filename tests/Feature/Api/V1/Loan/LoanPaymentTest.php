@@ -7,11 +7,13 @@ use App\Models\LoanPayment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class LoanPaymentTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -22,11 +24,17 @@ class LoanPaymentTest extends TestCase
      * Test can not make payment without fill the amount
      * @return void
      */
-    public function test_make_loan_payment_without_fill_amount() : void
+    public function test_make_loan_payment_without_fill_amount(): void
     {
 
-        $loan = $this->user->loans[0];
-        $this->withHeaders($this->customerAuthorization($this->user))
+        $user = $this->user;
+        $loan = $user->loans[0];
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post("/api/v1/customer/loan/$loan->id/payment")
             ->assertUnprocessable() // Status code 422
             ->assertJson([
@@ -44,10 +52,16 @@ class LoanPaymentTest extends TestCase
      * Test customer can not make payment for unapproved loan
      * @return void
      */
-    public function test_make_loan_payment_for_unapproved_loan() : void
+    public function test_make_loan_payment_for_unapproved_loan(): void
     {
-        $loan = $this->user->loans[0];
-        $this->withHeaders($this->customerAuthorization($this->user))
+        $user = $this->user;
+        $loan = $user->loans[0];
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post("/api/v1/customer/loan/$loan->id/payment", ['amount' => 1])
             ->assertStatus(400)
             ->assertJson([
@@ -60,16 +74,21 @@ class LoanPaymentTest extends TestCase
      * Test customer can make payment for approved loan
      * @return void
      */
-    public function test_make_loan_payment_for_approved_loan() : void
+    public function test_make_loan_payment_for_approved_loan(): void
     {
-        $user = User::factory()->create();
+        $user = $this->user;
         $loan = Loan::factory(['user_id' => $user->id, 'status' => 'APPROVED'])->create();
         LoanPayment::factory([
             'loan_id' => $loan->id,
             'payable_amount' => 3
         ])->create();
 
-        $response = $this->withHeaders($this->customerAuthorization($user))
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post("/api/v1/customer/loan/$loan->id/payment", ['amount' => 3])
             ->assertSuccessful()
             ->assertJson([
@@ -77,25 +96,4 @@ class LoanPaymentTest extends TestCase
             ]);
     }
 
-
-    /**
-     * Authorization service
-     * @param $user
-     * @return string[]
-     */
-    public function customerAuthorization($user) : array
-    {
-        $data = [
-            'email' => $user->email,
-            'password' => 'password'
-        ];
-        $response = $this->post('/api/v1/auth/login', $data)
-            ->assertStatus(200);
-        $token = $response['data']['token'];
-
-        return [
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ];
-    }
 }

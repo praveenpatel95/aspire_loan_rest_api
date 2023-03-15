@@ -16,12 +16,12 @@ class LoanPaymentModelTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->loan = Loan::factory(['user_id' => $this->user->id])->create();
-        $this->loanPayments = LoanPayment::factory(['loan_id' => $this->loan->id], 5)->create();
+        $this->loan = Loan::factory()->create(['user_id' => $this->user->id]);
+        $this->loanPayments = LoanPayment::factory()->create(['loan_id' => $this->loan->id]);
     }
 
     /**
-     * Check loan payment created
+     * Test loan payment can create
      * @return void
      */
     public function test_loan_payment_create() : void

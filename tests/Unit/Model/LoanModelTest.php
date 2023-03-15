@@ -17,31 +17,30 @@ class LoanModelTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->loan = Loan::factory(['user_id' => $this->user])->create();
+        $this->loan = Loan::factory()->create(['user_id' => $this->user]);
     }
 
     /**
-     * Check loan can create in database
+     * Test loan can create in loan modal
      * @return void
      */
     public function test_loan_can_create(): void
     {
         $this->assertTrue(true);
         $this->assertEquals(1, $this->loan->count());
-        $this->assertEquals($this->user->id, $this->loan->user_id);
     }
 
     /**
-     * Check loan have one user : belongs to
+     * Test loan is belong to user
      * @return void
      */
     public function test_loan_belongs_to_user(): void
     {
-        $this->assertEquals(1, $this->loan->user->count());
+        $this->assertEquals($this->loan->user_id, $this->user->id);
     }
 
     /**
-     * Check created loan default status PENDING
+     * Test loan created time default status is PENDING
      * @return void
      */
     public function test_loan_default_status_pending(): void
@@ -50,13 +49,13 @@ class LoanModelTest extends TestCase
     }
 
     /**
-     * Check loan have hasmany relation with loan payments
+     * Test loan have many payments
      * @return void
      */
     public function test_loan_has_many_payments(): void
     {
-        LoanPayment::factory(['loan_id' => $this->loan->id])->create();
-        $this->assertEquals(1, $this->loan->loanPayments->count());
+        LoanPayment::factory(2)->create(['loan_id' => $this->loan->id]);
+        $this->assertEquals(2, $this->loan->loanPayments->count());
     }
 
 

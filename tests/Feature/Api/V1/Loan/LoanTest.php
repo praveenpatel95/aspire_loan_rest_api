@@ -4,9 +4,9 @@ namespace Api\V1\Loan;
 
 use App\Models\Loan;
 use App\Models\User;
-use Carbon\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class LoanTest extends TestCase
@@ -17,10 +17,16 @@ class LoanTest extends TestCase
      * Test loan Request without fill the required field
      * @return void
      */
-    public function test_loan_request_without_required_field() : void
-    {
 
-        $this->withHeaders($this->customerAuthorization())
+    public function test_loan_request_without_required_field(): void
+    {
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post('/api/v1/customer/loan', [])
             ->assertUnprocessable() // Status code 422
             ->assertJson([
@@ -42,13 +48,19 @@ class LoanTest extends TestCase
      * @return void
      */
 
-    public function test_loan_request_with_required_field() : void
+    public function test_loan_request_with_required_field(): void
     {
         $data = [
             'amount' => 10.000,
             'term' => 3,
         ];
-        $this->withHeaders($this->customerAuthorization())
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post('/api/v1/customer/loan', $data)
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -61,7 +73,7 @@ class LoanTest extends TestCase
      * @return void
      */
 
-    public function test_loan_request_without_login_customer() : void
+    public function test_loan_request_without_login_customer(): void
     {
         $data = [
             'amount' => 10.000,
@@ -79,7 +91,7 @@ class LoanTest extends TestCase
      * Test can not get loan without login
      * @return void
      */
-    public function test_get_loans_without_login() : void
+    public function test_get_loans_without_login(): void
     {
 
         $this->withHeaders(['Accept' => 'application/json'])
@@ -94,10 +106,16 @@ class LoanTest extends TestCase
      * Test except admin can not access all loans route
      * @return void
      */
-    public function test_get_loans_without_login_as_a_admin() : void
+    public function test_get_loans_without_login_as_a_admin(): void
     {
 
-        $this->withHeaders($this->customerAuthorization())
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get('/api/v1/admin/loan')
             ->assertForbidden() // Status code 401
             ->assertJson([
@@ -110,10 +128,16 @@ class LoanTest extends TestCase
      * Test Admin can get all customers loans
      * @return void
      */
-    public function test_get_loans_with_login_as_a_admin() : void
+    public function test_get_loans_with_login_as_a_admin(): void
     {
 
-        $this->withHeaders($this->customerAuthorization('ADMIN'))
+        $user = User::factory()->create(['role' => 'ADMIN']);
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get('/api/v1/admin/loan')
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -125,11 +149,18 @@ class LoanTest extends TestCase
      * Test admin can see loan detail by loan id
      * @return void
      */
-    public function test_get_loan_detail_login_as_a_admin() : void
+    public function test_get_loan_detail_login_as_a_admin(): void
     {
-        $user = User::factory()->create();
-        $loan = Loan::factory()->create(['user_id' => $user->id]);
-        $this->withHeaders($this->customerAuthorization('ADMIN'))
+        $customer = User::factory()->create();
+        $loan = Loan::factory()->create(['user_id' => $customer->id]);
+
+        $user = User::factory()->create(['role' => 'ADMIN']);
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get('/api/v1/loan/' . $loan->id)
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -141,11 +172,17 @@ class LoanTest extends TestCase
      * Test customer can see only self loan detail
      * @return void
      */
-    public function test_get_loan_detail_login_as_a_customer() : void
+    public function test_get_loan_detail_login_as_a_customer(): void
     {
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
-        $this->withHeaders($this->customerAuthorization($user))
+        Passport::actingAs($user);
+        $user = $user->withToken();
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get('/api/v1/loan/' . $loan->id)
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -157,11 +194,18 @@ class LoanTest extends TestCase
      * Test customer can not see other customer loan detail
      * @return void
      */
-    public function test_get_loan_detail_other_customer_login_as_customer() : void
+    public function test_get_loan_detail_other_customer_login_as_customer(): void
     {
+        $customer = User::factory()->create();
+        $loan = Loan::factory()->create(['user_id' => $customer->id]);
+
         $user = User::factory()->create();
-        $loan = Loan::factory()->create(['user_id' => $user->id]);
-        $this->withHeaders($this->customerAuthorization())
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get('/api/v1/loan/' . $loan->id)
             ->assertStatus(400)
             ->assertJson([
@@ -174,11 +218,18 @@ class LoanTest extends TestCase
      * Test loan only approve by admin
      * @return void
      */
-    public function test_approve_loan_by_admin_only() : void
+    public function test_approve_loan_by_admin_only(): void
     {
-        $user = User::factory()->create();
-        $loan = Loan::factory()->create(['user_id' => $user->id]);
-        $this->withHeaders($this->customerAuthorization('ADMIN'))
+        $customer = User::factory()->create();
+        $loan = Loan::factory()->create(['user_id' => $customer->id]);
+
+        $user = User::factory()->create(['role' => 'ADMIN']);
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post("/api/v1/admin/loan/$loan->id/approve")
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -193,11 +244,16 @@ class LoanTest extends TestCase
      * Test loan can not approve by except of the admin
      * @return void
      */
-    public function test_not_approve_loan_login_as_customer() : void
+    public function test_not_approve_loan_login_as_customer(): void
     {
         $user = User::factory()->create();
         $loan = Loan::factory()->create(['user_id' => $user->id]);
-        $this->withHeaders($this->customerAuthorization())
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->post("/api/v1/admin/loan/$loan->id/approve")
             ->assertForbidden() // Status code 200
             ->assertJson([
@@ -210,11 +266,15 @@ class LoanTest extends TestCase
      * Test Customer can get all self loan details
      * @return void
      */
-    public function test_get_customer_loans_login_as_customer() : void
+    public function test_get_customer_loans_login_as_customer(): void
     {
         $user = User::factory()->hasLoans(5)->create();
-
-        $response = $this->withHeaders($this->customerAuthorization('CUSTOMER', $user))
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get("/api/v1/customer/loan")
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -227,11 +287,15 @@ class LoanTest extends TestCase
      * Test if customer have no any loan
      * @return void
      */
-    public function test_get_customer_have_no_any_loan_login_as_customer() : void
+    public function test_get_customer_have_no_any_loan_login_as_customer(): void
     {
         $user = User::factory()->create();
-
-        $response = $this->withHeaders($this->customerAuthorization('CUSTOMER', $user))
+        Passport::actingAs($user);
+        $user = $user->withToken();
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $user->token,
+            'Accept' => 'application/json',
+        ])
             ->get("/api/v1/customer/loan")
             ->assertSuccessful() // Status code 200
             ->assertJson([
@@ -240,26 +304,4 @@ class LoanTest extends TestCase
         $this->assertEquals(0, count($response['data']));
     }
 
-    /**
-     * Common authorization service
-     * @param $user
-     * @param $role
-     * @return string[]
-     */
-    public function customerAuthorization($role = 'CUSTOMER', $user = null) : array
-    {
-        $user = $user ? $user : User::factory()->create(['role' => $role]);
-        $data = [
-            'email' => $user->email,
-            'password' => 'password'
-        ];
-        $response = $this->post('/api/v1/auth/login', $data)
-            ->assertStatus(200);
-        $token = $response['data']['token'];
-
-        return [
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json',
-        ];
-    }
 }

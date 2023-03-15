@@ -15,26 +15,25 @@ class UserModelTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory(['name' => 'prem'])->create();
+        $this->user = User::factory()->create(['name' => 'prem']);
     }
 
     /**
-     * User can create
+     * Test user can create
      * @return void
      */
     public function test_user_can_create(): void
     {
-        $this->assertEquals('prem', $this->user->name);
-
+        $this->assertEquals(1, $this->user->count());
     }
 
     /**
-     * User have loans : User has many relation with loans
+     * Test user has many loans
      * @return void
      */
     public function test_user_has_many_loans(): void
     {
-        Loan::factory(['user_id' => $this->user->id])->create();
-        $this->assertEquals(1, $this->user->loans->count());
+        Loan::factory( 2)->create(['user_id' => $this->user->id]);
+        $this->assertEquals(2, $this->user->loans->count());
     }
 }

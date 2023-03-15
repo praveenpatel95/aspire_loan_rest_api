@@ -12,7 +12,7 @@ class LoginTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * Test user can not login without required fields
+     * Test user can not log in without required fields
      * Check required validation
      * @return void
      */
@@ -36,7 +36,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test user can not login with invalid login detail
+     * Test user can not log in with invalid login detail
      * @return void
      */
     public function test_not_login_with_invalid_credentials(): void
@@ -56,7 +56,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * Test user can login with valid login detail
+     * Test user can log in with valid login detail
      * @return void
      */
     public function test_login_with_valid_credentials(): void
